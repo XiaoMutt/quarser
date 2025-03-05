@@ -5,8 +5,8 @@ import {
     ParsedOperativeNode,
     ParsedRawNode,
     RAW_NODE_TYPE
-} from "./basis";
-import {parseSubQuery} from "./index";
+} from "./types";
+import {parseSubQuery} from "./parser";
 
 export const LOGICAL_OPERATOR = {
     NOT: "not",

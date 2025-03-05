@@ -7,7 +7,7 @@ import {
     ParsedRawNode,
     Primitive,
     RAW_NODE_TYPE
-} from "./basis";
+} from "./types";
 
 export const FILTER_OPERATOR = {
     // ATTENTION: do not switch the order. The order of the keys matters. E.g. >= and >. >= must be checked first than >

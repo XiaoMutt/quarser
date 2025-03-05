@@ -1,5 +1,5 @@
 import {expect, test} from 'vitest'
-import {parseQuery} from '../src/index'
+import {parseQuery} from '../src'
 import {
     ParsedFilterNode,
     ParsedRawFilterKeyNode,

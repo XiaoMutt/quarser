@@ -26,6 +26,7 @@ export interface ParsedNode {
     readonly type: NodeType
 }
 
+
 /**
  * Operative node are node with value as operator and left and right as operons.
  */
@@ -39,12 +40,13 @@ export class ParsedOperativeNode implements ParsedNode {
     public readonly isValid: boolean
 
     constructor(type: OPERATIVE_NODE_TYPE, value?: ParsedNode, left?: ParsedNode, right?: ParsedNode) {
+        const isValid = this.checkIsValid(value, left, right)
         this.type = type
         this.value = value
         this.left = left
         this.right = right
         this.start = (left?.start !== undefined && value?.start !== undefined) ? Math.min(left.start, value.start) : (left?.start || value?.start)
-        this.stop = (right?.stop !== undefined && value?.stop !== undefined) ? Math.max(right.stop, value.stop) : (right?.stop || value?.stop)
+        this.stop = isValid ? (right?.stop !== undefined && value?.stop !== undefined) ? Math.max(right.stop, value.stop) : (right?.stop || value?.stop) : undefined
         this.isValid = this.checkIsValid(value, left, right)
 
     }
