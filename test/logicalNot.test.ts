@@ -1,116 +1,55 @@
 import { expect, test } from 'vitest'
-import { FILTER_NODE_TYPE, FILTER_OPERATOR, LOGICAL_OPERATOR, parseQuery } from '../src/index'
-import { start } from 'repl'
+import {
+    parseQuery
+} from '../src'
+import {
+    ParsedFilterNode,
+    ParsedRawFilterKeyNode,
+    ParsedRawFilterOperatorNode,
+    ParsedRawFilterValueNode
+} from "../src/filter";
+import {LOGICAL_OPERATOR, ParsedLogicalNotNode, ParsedRawLogicalOperatorNode} from "../src/logical";
 
 
-test('logical not', () => {
-
-    // value only
-    expect(parseQuery('not "abc"')).toEqual({
-        type: LOGICAL_OPERATOR.NOT,
-        children: [{
-            type: FILTER_NODE_TYPE.FILTER,
-            children: [
-                null,
-                null,
-                {
-                    type: FILTER_NODE_TYPE.VALUE,
-                    children: ["abc"],
-                    start: 4,
-                    stop: 9,
-                    isValid: true
-                }
-            ],
-            start: 4,
-            stop: 9,
-            isValid: true
-        }],
-        start: 0,
-        stop: 9,
-        isValid: true
-    })
-
-    // filter
-    expect(parseQuery('not `key`: "abc"')).toEqual({
-        type: LOGICAL_OPERATOR.NOT,
-        children: [{
-            type: FILTER_NODE_TYPE.FILTER,
-            children: [
-                {
-                    type: FILTER_NODE_TYPE.KEY,
-                    children: ["key"],
-                    start: 4,
-                    stop: 9,
-                    isValid: true
-
-                },
-                {
-                    type: FILTER_NODE_TYPE.OPERATOR,
-                    children: [FILTER_OPERATOR.FUZZY_MATCH],
-                    start: 9,
-                    stop: 10,
-                    isValid: true
-                },
-                {
-                    type: FILTER_NODE_TYPE.VALUE,
-                    children: ["abc"],
-                    start: 11,
-                    stop: 16,
-                    isValid: true
-                }
-            ],
-            start: 4,
-            stop: 16,
-            isValid: true
-        }],
-        start: 0,
-        stop: 16,
-        isValid: true
-    })
-
-
-    // not with filter
-    expect(parseQuery('not not `key`: "abc"')).toEqual({
-        type: LOGICAL_OPERATOR.NOT,
-        children: [{
-            type: LOGICAL_OPERATOR.NOT,
-            children: [{
-                type: FILTER_NODE_TYPE.FILTER,
-                children: [
-                    {
-                        type: FILTER_NODE_TYPE.KEY,
-                        children: ["key"],
-                        start: 8,
-                        stop: 13,
-                        isValid: true
-
-                    },
-                    {
-                        type: FILTER_NODE_TYPE.OPERATOR,
-                        children: [FILTER_OPERATOR.FUZZY_MATCH],
-                        start: 13,
-                        stop: 14,
-                        isValid: true
-                    },
-                    {
-                        type: FILTER_NODE_TYPE.VALUE,
-                        children: ["abc"],
-                        start: 15,
-                        stop: 20,
-                        isValid: true
-                    }
-                ],
-                start: 8,
-                stop: 20,
-                isValid: true
-            }],
-            start: 4,
-            stop: 20,
-            isValid: true
-        }],
-        start: 0,
-        stop: 20,
-        isValid: true
-    })
+test('single not with value only filter', () => {
+    expect(parseQuery('not "abc"')).toEqual(
+        new ParsedLogicalNotNode(
+            new ParsedRawLogicalOperatorNode(LOGICAL_OPERATOR.NOT, 0, 3),
+            new ParsedFilterNode(
+                new ParsedRawFilterOperatorNode(null, 4, 4),
+                new ParsedRawFilterKeyNode(null, 4, 4),
+                new ParsedRawFilterValueNode("abc", 4, 9)
+            )
+        )
+    )
 })
 
+test('single not with filter', () => {
+    expect(parseQuery('not `key`: "abc"')).toEqual(
+        new ParsedLogicalNotNode(
+            new ParsedRawLogicalOperatorNode(LOGICAL_OPERATOR.NOT, 0, 3),
+            new ParsedFilterNode(
+                new ParsedRawFilterOperatorNode(':', 9, 10),
+                new ParsedRawFilterKeyNode("key", 4, 9),
+                new ParsedRawFilterValueNode("abc", 11, 16)
+            )
+        )
+    )
+})
+
+
+test('double not with filter', () => {
+    expect(parseQuery('not not `key`: "abc"')).toEqual(
+        new ParsedLogicalNotNode(
+            new ParsedRawLogicalOperatorNode(LOGICAL_OPERATOR.NOT, 0, 3),
+            new ParsedLogicalNotNode(
+                new ParsedRawLogicalOperatorNode(LOGICAL_OPERATOR.NOT, 4, 7),
+                new ParsedFilterNode(
+                    new ParsedRawFilterOperatorNode(':', 13, 14),
+                    new ParsedRawFilterKeyNode("key", 8, 13),
+                    new ParsedRawFilterValueNode("abc", 15, 20)
+                )
+            )
+        )
+    )
+})
