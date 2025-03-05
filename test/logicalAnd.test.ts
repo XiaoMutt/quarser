@@ -7,6 +7,7 @@ import {
     ParsedRawFilterValueNode
 } from "../src/filter";
 import {LOGICAL_OPERATOR, ParsedLogicalAndNode, ParsedRawLogicalOperatorNode} from "../src/logical";
+import {ParsedErrorNode, ParsedRawMessageNode} from "../src/parser";
 
 
 test('nicked value only', () => {
@@ -106,4 +107,17 @@ test('filter and filter and filter', () => {
                 ),
             )
         ))
+})
+
+test('filter and spaced value only filter', () => {
+    expect(parseQuery('`key`: abc d and "def"')).toEqual(
+        new ParsedErrorNode(
+            new ParsedRawMessageNode("Missing expression at 11", 11),
+            new ParsedFilterNode(
+                new ParsedRawFilterOperatorNode(':', 5, 6),
+                new ParsedRawFilterKeyNode("key", 0, 5),
+                new ParsedRawFilterValueNode("abc", 7, 10)
+            )
+        )
+    )
 })

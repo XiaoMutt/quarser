@@ -76,7 +76,7 @@ test('parentheses or and', () => {
             ),
 
             new ParsedFilterNode(
-                new ParsedRawFilterOperatorNode(FILTER_OPERATOR.FUZZY_MATCH, 26, 27),
+                new ParsedRawFilterOperatorNode(FILTER_OPERATOR.MATCH, 26, 27),
                 new ParsedRawFilterKeyNode("field", 19, 26),
                 new ParsedRawFilterValueNode("ghi", 28, 33)
             )
@@ -111,7 +111,7 @@ test('parentheses double parentheses', () => {
                 new ParsedLogicalOrNode(
                     new ParsedRawLogicalOperatorNode(LOGICAL_OPERATOR.OR, 35, 37),
                     new ParsedFilterNode(
-                        new ParsedRawFilterOperatorNode(FILTER_OPERATOR.FUZZY_MATCH, 27, 28),
+                        new ParsedRawFilterOperatorNode(FILTER_OPERATOR.MATCH, 27, 28),
                         new ParsedRawFilterKeyNode("field", 20, 27),
                         new ParsedRawFilterValueNode("ghi", 29, 34)
                     ),

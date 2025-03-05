@@ -31,7 +31,7 @@ test('test priority', () => {
                 new ParsedLogicalNotNode(
                     new ParsedRawLogicalOperatorNode(LOGICAL_OPERATOR.NOT, 7, 10),
                     new ParsedFilterNode(
-                        new ParsedRawFilterOperatorNode(FILTER_OPERATOR.FUZZY_MATCH, 22, 23),
+                        new ParsedRawFilterOperatorNode(FILTER_OPERATOR.MATCH, 22, 23),
                         new ParsedRawFilterKeyNode("condition", 11, 22),
                         new ParsedRawFilterValueNode(false, 24, 29),
                     )
@@ -62,7 +62,7 @@ test('test condition with parentheses', () => {
                     new ParsedLogicalNotNode(
                         new ParsedRawLogicalOperatorNode(LOGICAL_OPERATOR.NOT, 8, 11),
                         new ParsedFilterNode(
-                            new ParsedRawFilterOperatorNode(FILTER_OPERATOR.FUZZY_MATCH, 23, 24),
+                            new ParsedRawFilterOperatorNode(FILTER_OPERATOR.MATCH, 23, 24),
                             new ParsedRawFilterKeyNode("condition", 12, 23),
                             new ParsedRawFilterValueNode(false, 25, 30),
                         )

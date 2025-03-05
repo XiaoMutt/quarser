@@ -96,3 +96,13 @@ test('string value quoted', () => {
         ),
     )
 })
+test('string value half quoted', () => {
+    // string quoted
+    expect(parseQuery(`"abc`)).toEqual(
+        new ParsedFilterNode(
+            new ParsedRawFilterOperatorNode(null, 0, 0),
+            new ParsedRawFilterKeyNode(null, 0, 0),
+            new ParsedRawFilterValueNode(undefined, 0, 0)
+        ),
+    )
+})

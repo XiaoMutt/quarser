@@ -1,4 +1,5 @@
 export const enum RAW_NODE_TYPE {
+    MESSAGE = "message",
     FILTER_KEY = "filter_key",
     FILTER_VALUE = "filter_value",
     FILTER_OPERATOR = "filter_operator",
@@ -7,6 +8,7 @@ export const enum RAW_NODE_TYPE {
 }
 
 export const enum OPERATIVE_NODE_TYPE {
+    ERROR = "error",
     FILTER = "filter",
     LOGIC = "logic",
     PARENTHESES = "parentheses"
@@ -67,12 +69,14 @@ export class ParsedRawNode implements ParsedNode {
     public readonly type: RAW_NODE_TYPE
 
     constructor(type: RAW_NODE_TYPE, value?: ParsedRaw, start?: number, stop?: number) {
+        const isValid = value !== undefined && start !== undefined && stop !== undefined
+
         this.value = value
         this.left = undefined
         this.right = undefined
         this.start = start
-        this.stop = stop
-        this.isValid = value !== undefined && start !== undefined && stop !== undefined
+        this.stop = isValid ? stop : undefined
+        this.isValid = isValid
         this.type = type
     }
 }

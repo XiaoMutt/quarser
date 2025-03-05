@@ -22,7 +22,7 @@ export const FILTER_OPERATOR = {
     GREATER_EQUAL: ">=",
     LESS_THAN: "<",
     GREATER_THAN: ">",
-    FUZZY_MATCH: ":"
+    MATCH: ":"
 } as const
 
 export type FilterOperator = (typeof FILTER_OPERATOR)[keyof typeof FILTER_OPERATOR]
@@ -39,7 +39,7 @@ export const FILTER_OPERATOR_BOUNDARY = {
     [FILTER_OPERATOR.GREATER_EQUAL]: /[^!=><:]/,
     [FILTER_OPERATOR.LESS_THAN]: /[^!=><:]/,
     [FILTER_OPERATOR.GREATER_THAN]: /[^!=><:]/,
-    [FILTER_OPERATOR.FUZZY_MATCH]: /[^!=><:]/,
+    [FILTER_OPERATOR.MATCH]: /[^!=><:]/,
 }
 
 export class ParsedFilterNode extends ParsedOperativeNode {
@@ -48,7 +48,7 @@ export class ParsedFilterNode extends ParsedOperativeNode {
     }
 
     checkIsValid(value?: ParsedNode, left?: ParsedNode, right?: ParsedNode): boolean {
-        return value?.isValid===true && left?.isValid===true && right?.isValid === true
+        return value?.isValid === true && left?.isValid === true && right?.isValid === true
     }
 }
 
@@ -85,7 +85,7 @@ export class ParsedRawFilterKeyNode extends ParsedRawNode {
 
 
 function convertCharsToValue(chars: string[]) {
-    if (chars.length===0) return undefined
+    if (chars.length === 0) return undefined
 
     const value = chars.join('')
     const lower = value.toLowerCase()
@@ -96,8 +96,8 @@ function convertCharsToValue(chars: string[]) {
         converted = true
     } else if (lower === "false") {
         converted = false
-    } else if (value?.startsWith('"') && value?.endsWith('"')) {
-        converted = value.substring(1, value.length - 1)
+    } else if (value?.startsWith('"')) {
+        converted = value?.endsWith('"') ? value.substring(1, value.length - 1) : undefined // invalid
     } else {
         const n = parseFloat(value)
         if (!Number.isNaN(n)) {
@@ -137,7 +137,7 @@ function parseFilterKey(query: string, startIndex: number): ParsedRawFilterKeyNo
         switch (c) {
             case undefined:
                 // early stopped
-                return new ParsedRawFilterKeyNode(undefined, escapedQuery.startIndex, escapedQuery.currentIndex)
+                return new ParsedRawFilterKeyNode(undefined, escapedQuery.startIndex, undefined)
 
             case '`':
                 if (chars.length === 0) {
