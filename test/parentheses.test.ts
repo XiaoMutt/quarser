@@ -30,6 +30,36 @@ test('no meaning parentheses, single', () => {
     )
 })
 
+test('no meaning parentheses, filter', () => {
+    expect(parseQuery('(`key`: abc)')).toEqual(
+        new ParsedParenthesesNode(
+            new ParsedFilterNode(
+                new ParsedRawFilterOperatorNode(FILTER_OPERATOR.MATCH, 6, 7),
+                new ParsedRawFilterKeyNode(`key`, 1, 6),
+                new ParsedRawFilterValueNode("abc", 8, 11)
+            ),
+            new ParsedRawParenthesisNode('(', 0, 1),
+            new ParsedRawParenthesisNode(')', 11, 12)
+        )
+    )
+})
+
+test('half parentheses error, filter', () => {
+    expect(parseQuery('(`key`: abc')).toEqual(
+        new ParsedParenthesesNode(
+            new ParsedFilterNode(
+                new ParsedRawFilterOperatorNode(FILTER_OPERATOR.MATCH, 6, 7),
+                new ParsedRawFilterKeyNode(`key`, 1, 6),
+                new ParsedRawFilterValueNode("abc", 8, 11)
+            ),
+            new ParsedRawParenthesisNode('(', 0, 1)
+        )
+    )
+})
+
+
+
+
 test('no meaning parentheses, or', () => {
     expect(parseQuery('(abc or "def")')).toEqual(
         new ParsedParenthesesNode(

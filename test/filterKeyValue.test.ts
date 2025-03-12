@@ -139,7 +139,7 @@ test('in invalid array: empty comma', () => {
         new ParsedFilterNode(
             new ParsedRawFilterOperatorNode(FILTER_OPERATOR.IN, 6, 8),
             new ParsedRawFilterKeyNode("key", 0, 5),
-            undefined
+            new ParsedRawFilterValueNode(["abc", true], 9)
         )
     )
 })
@@ -149,7 +149,7 @@ test('in invalid array: trailing comma value', () => {
         new ParsedFilterNode(
             new ParsedRawFilterOperatorNode(FILTER_OPERATOR.IN, 6, 8),
             new ParsedRawFilterKeyNode("key", 0, 5),
-            undefined
+            new ParsedRawFilterValueNode(["abc", true, null, 1.324], 9)
         )
     )
 })
@@ -160,7 +160,7 @@ test('in invalid array value', () => {
         new ParsedFilterNode(
             new ParsedRawFilterOperatorNode(FILTER_OPERATOR.IN, 6, 8),
             new ParsedRawFilterKeyNode("key", 0, 5),
-            undefined
+            new ParsedRawFilterValueNode(["abc", true, null], 9)
         )
     )
 })

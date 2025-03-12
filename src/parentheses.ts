@@ -38,14 +38,14 @@ export function parseParenthesesNode(query: string, startIndex: number): ParsedN
     const leftParenthesisNode = new ParsedRawParenthesisNode('(', escapedQuery.startIndex, escapedQuery.currentIndex)
     const parsedInnerNode = parseSubQuery(query, escapedQuery.currentIndex, 0)
     if (!parsedInnerNode?.isValid) {
-        return new ParsedFilterNode(parsedInnerNode, leftParenthesisNode)
+        return new ParsedParenthesesNode(parsedInnerNode, leftParenthesisNode)
     }
 
     const newEscapedQuery = new EscapedQuery(query, parsedInnerNode.stop!!)
 
     if (newEscapedQuery.next() !== ')') {
         // partial parentheses
-        return new ParsedFilterNode(parsedInnerNode, leftParenthesisNode)
+        return new ParsedParenthesesNode(parsedInnerNode, leftParenthesisNode)
     }
 
     const rightParenthesisNode = new ParsedRawParenthesisNode(')', newEscapedQuery.startIndex, newEscapedQuery.currentIndex)

@@ -98,13 +98,15 @@ function convertCharsToValue(chars: string[]) {
         converted = false
     } else if (value?.startsWith('"')) {
         converted = value?.endsWith('"') ? value.substring(1, value.length - 1) : undefined // invalid
-    } else {
+    } else if (/\b[+-]?\d+(\.\d+)?([eE][+-]?\d+)?\b/.test(value)) {
         const n = parseFloat(value)
         if (!Number.isNaN(n)) {
             converted = n
         } else {
             converted = value
         }
+    } else {
+        converted = value
     }
 
     return converted
@@ -197,7 +199,7 @@ function parseFilterPrimitiveValue(query: string, startIndex: number): ParsedRaw
                     return new ParsedRawFilterValueNode(convertCharsToValue(chars), escapedQuery.startIndex, escapedQuery.currentIndex)
                 }
                 break
-            case /[^\w\.\-+]/.test(c):
+            case /[^\w.\-+]/.test(c):
                 // not a word not a number
                 if (chars[0] === '"') {
                     // inside quote
@@ -214,7 +216,7 @@ function parseFilterPrimitiveValue(query: string, startIndex: number): ParsedRaw
     }
 }
 
-function parseFilterArrayValue(query: string, startIndex: number): ParsedNode | undefined {
+function parseFilterArrayValue(query: string, startIndex: number): ParsedRawFilterValueNode | undefined {
     const escapedQuery = new EscapedQuery(query, startIndex)
     if (escapedQuery.isEnded) return undefined
     if (escapedQuery.next() !== '[') return undefined
@@ -223,7 +225,7 @@ function parseFilterArrayValue(query: string, startIndex: number): ParsedNode | 
     const values: Primitive[] = []
     while (true) {
         const parsedValue = parseFilterPrimitiveValue(query, escapedQuery.currentIndex)
-        if (!parsedValue?.isValid) return undefined
+        if (!parsedValue?.isValid) return new ParsedRawFilterValueNode(values, escapedQuery.startIndex, undefined)
         escapedQuery.setIndex(parsedValue.stop!!)
 
         values.push(parsedValue.value as Primitive)
@@ -231,7 +233,7 @@ function parseFilterArrayValue(query: string, startIndex: number): ParsedNode | 
         while (true) {
             const next = escapedQuery.next()
             if (next === undefined) {
-                return undefined
+                return new ParsedRawFilterValueNode(values, escapedQuery.startIndex, undefined)
             } else if (next === ']') {
                 return new ParsedRawFilterValueNode(values, escapedQuery.startIndex, escapedQuery.currentIndex)
             } else if (next === ',') {
@@ -253,7 +255,6 @@ export function parseFilter(query: string, startIndex: number): ParsedFilterNode
         // no key found; parse value directly
         const value = parseFilterPrimitiveValue(query, escapedQuery.currentIndex)
         if (value === undefined) return undefined
-
         // found
         const nullRawFilterOperatorNode = new ParsedRawFilterOperatorNode(null, escapedQuery.currentIndex, escapedQuery.currentIndex)
         const nullRawFilterKeyNode = new ParsedRawFilterKeyNode(null, escapedQuery.currentIndex, escapedQuery.currentIndex)
