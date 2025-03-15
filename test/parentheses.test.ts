@@ -58,8 +58,6 @@ test('half parentheses error, filter', () => {
 })
 
 
-
-
 test('no meaning parentheses, or', () => {
     expect(parseQuery('(abc or "def")')).toEqual(
         new ParsedParenthesesNode(

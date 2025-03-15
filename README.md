@@ -30,10 +30,10 @@ depends on the programmer.
 ### Example
 - abc
   - this query is a single filter with value "abc"
-- `isPublic` == true
-  - this query means the field `isPublic` should equal the value true
-- `pi`: "3.14"
-  - this query means the field `pi`'s value should match the string "3.14"
+- \`isPublic\` == true
+  - this query means the field \`isPublic\` should equal the value true
+- \`pi\`: "3.14"
+  - this query means the field \`pi\`'s value should match the string "3.14"
 
 ## ParsedNode
 ### Description

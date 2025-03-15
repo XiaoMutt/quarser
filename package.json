@@ -1,6 +1,6 @@
 {
   "name": "quarser",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
@@ -12,9 +12,9 @@
   "license": "ISC",
   "description": "",
   "devDependencies": {
-    "@types/node": "^22.10.5",
+    "@types/node": "^22.13.10",
     "ts-node": "^10.9.2",
-    "typescript": "^5.7.3",
-    "vitest": "^2.1.8"
+    "typescript": "^5.8.2",
+    "vitest": "^3.0.8"
   }
 }
