@@ -1,8 +1,6 @@
-import { expect, test } from 'vitest'
+import {expect, test} from 'vitest'
 
-import {
-    parseQuery,
-} from '../src'
+import {parseQuery,} from '../src'
 import {
     FILTER_OPERATOR,
     ParsedFilterNode,
@@ -143,6 +141,7 @@ test('in invalid array: empty comma', () => {
         )
     )
 })
+
 test('in invalid array: trailing comma value', () => {
     // string quoted
     expect(parseQuery('`key` in ["abc", true, null, 1.324,]')).toEqual(
@@ -175,3 +174,12 @@ test('not in string array value', () => {
     )
 })
 
+test('error: no operator. ', () => {
+    // string nicked
+    expect(parseQuery('`key` abc')).toEqual(
+        new ParsedFilterNode(
+            undefined,
+            new ParsedRawFilterKeyNode("key", 0, 5),
+        )
+    )
+})

@@ -47,8 +47,13 @@ export class ParsedOperativeNode implements ParsedNode {
         this.value = value
         this.left = left
         this.right = right
-        this.start = (left?.start !== undefined && value?.start !== undefined) ? Math.min(left.start, value.start) : (left?.start || value?.start)
-        this.stop = isValid ? (right?.stop !== undefined && value?.stop !== undefined) ? Math.max(right.stop, value.stop) : (right?.stop || value?.stop) : undefined
+        this.start = (left?.start !== undefined && value?.start !== undefined) ?
+            Math.min(left.start, value.start) : (left?.start == null ? value?.start : left.start)
+        this.stop = isValid ?
+            ((right?.stop !== undefined && value?.stop !== undefined) ?
+                Math.max(right.stop, value.stop) :
+                (right?.stop == null ? value?.stop : right.stop)) :
+            undefined
         this.isValid = this.checkIsValid(value, left, right)
 
     }
