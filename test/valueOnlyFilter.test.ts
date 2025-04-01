@@ -1,7 +1,5 @@
-import { expect, test } from 'vitest'
-import {
-    parseQuery
-} from '../src'
+import {expect, test} from 'vitest'
+import {parseQuery} from '../src'
 import {
     ParsedFilterNode,
     ParsedRawFilterKeyNode,
@@ -103,6 +101,51 @@ test('string value half quoted', () => {
             new ParsedRawFilterOperatorNode(null, 0, 0),
             new ParsedRawFilterKeyNode(null, 0, 0),
             new ParsedRawFilterValueNode(undefined, 0, 0)
+        ),
+    )
+})
+
+
+test('string value single quoted', () => {
+    // string quoted
+    expect(parseQuery(`'abc'`)).toEqual(
+        new ParsedFilterNode(
+            new ParsedRawFilterOperatorNode(null, 0, 0),
+            new ParsedRawFilterKeyNode(null, 0, 0),
+            new ParsedRawFilterValueNode(`'abc'`, 0, 5)
+        ),
+    )
+})
+
+test('string value half single quoted', () => {
+    // string quoted
+    expect(parseQuery(`abc'`)).toEqual(
+        new ParsedFilterNode(
+            new ParsedRawFilterOperatorNode(null, 0, 0),
+            new ParsedRawFilterKeyNode(null, 0, 0),
+            new ParsedRawFilterValueNode(`abc'`, 0, 4)
+        ),
+    )
+})
+
+test('string value dot', () => {
+    // string quoted
+    expect(parseQuery(`.abc.`)).toEqual(
+        new ParsedFilterNode(
+            new ParsedRawFilterOperatorNode(null, 0, 0),
+            new ParsedRawFilterKeyNode(null, 0, 0),
+            new ParsedRawFilterValueNode(`.abc.`, 0, 5)
+        ),
+    )
+})
+
+test('string value dot chain', () => {
+    // string quoted
+    expect(parseQuery(`a.b.c.d`)).toEqual(
+        new ParsedFilterNode(
+            new ParsedRawFilterOperatorNode(null, 0, 0),
+            new ParsedRawFilterKeyNode(null, 0, 0),
+            new ParsedRawFilterValueNode(`a.b.c.d`, 0, 7)
         ),
     )
 })

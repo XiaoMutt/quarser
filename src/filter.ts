@@ -199,7 +199,7 @@ function parseFilterPrimitiveValue(query: string, startIndex: number): ParsedRaw
                     return new ParsedRawFilterValueNode(convertCharsToValue(chars), escapedQuery.startIndex, escapedQuery.currentIndex)
                 }
                 break
-            case /[^\w.\-+]/.test(c):
+            case /[\s`(),\[\]]/.test(c):
                 // not a word not a number
                 if (chars[0] === '"') {
                     // inside quote
